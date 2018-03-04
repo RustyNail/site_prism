@@ -7,7 +7,6 @@ Next Up:
 1) Figure out why the loadable spec isn't playing nicely with code-coverage
 One line to tidy up for full compliance: `spec/page_spec.rb:91`
 2) Travis:
-- Add in Chrome
 - Update Driver/Browser
 3) Fix `page_element_interaction_steps.rb`: Triple Expectations and non-Helper expectation
 4) Fix `page_section_steps.rb` - Triple expectations
