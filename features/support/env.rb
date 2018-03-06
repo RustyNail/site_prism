@@ -44,8 +44,7 @@ Capybara.configure do |config|
 end
 
 Capybara.register_driver :selenium do |app|
-  browser = ENV['TARGET_BROWSER'].to_sym || :firefox
-  profile = if browser == :chrome
+  profile = if chrome?
               Selenium::WebDriver::Chrome::Profile.new
             else
               Selenium::WebDriver::Firefox::Profile.new
@@ -53,6 +52,15 @@ Capybara.register_driver :selenium do |app|
   profile['browser.cache.disk.enable'] = false
   profile['browser.cache.memory.enable'] = false
   Capybara::Selenium::Driver.new(app, browser: browser, profile: profile)
+
+  private
+  def chrome?
+    browser == :chrome
+  end
+
+  def browser
+    ENV['TARGET_BROWSER'].to_sym
+  end
 end
 
 SitePrism.configure do |config|
