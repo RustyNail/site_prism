@@ -5,7 +5,10 @@ sudo: required
 dist: trusty
 
 rvm:
-  - 2.3.1
+  - 2.0.0
+  - 2.1.10
+  - 2.2.9
+  - 2.3.6
 
 env:
   - TARGET_BROWSER=chrome
