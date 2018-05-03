@@ -75,10 +75,10 @@ Then(/^I can see an anonymous section$/) do
 end
 
 Then(/^I can see a collection of anonymous sections$/) do
-  @test_site.section_experiments.anonymous_sections.each_with_index do |section, i|
-    expect(section.title.text).to eq("Section #{i}")
+  @test_site.section_experiments.anonymous_sections.each_with_index do |section, index|
+    expect(section.title.text).to eq("Section #{index}")
 
-    expect(section.downcase_title_text).to eq("section #{i}")
+    expect(section.downcase_title_text).to eq("section #{index}")
   end
 
   expect(@test_site.section_experiments.anonymous_sections.size).to eq(2)
@@ -96,9 +96,11 @@ Then(/^all expected elements are present in the search results$/) do
   expect(@test_site.section_experiments.search_results.first).to be_all_there
 end
 
-Then(/^I can run javascript against the search results$/) do
-  @test_site.section_experiments.search_results.first.set_cell_value
+When(/^I execute some javascript to set a value$/) do
+  @test_site.section_experiments.search_results.first.cell_value = 'wibble'
+end
 
+Then(/^I can evaluate some javascript to get the value$/) do
   expect(@test_site.section_experiments.search_results.first.cell_value).to eq('wibble')
 end
 
@@ -146,5 +148,5 @@ end
 Then(/^I can see a section's full text$/) do
   expect(@test_site.home.people.text).to eq('People person 1 person 2 person 3 person 4')
 
-  expect(@test_site.home.container_with_element.text).to eq('')
+  expect(@test_site.home.container_with_element.text).to eq('This will be removed when you click submit above')
 end

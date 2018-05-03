@@ -1,6 +1,7 @@
 Feature: Interaction with groups of elements
 
   I want to be able to interact with element collections on a page
+  In order to work with large collections of data
 
   Background:
     When I navigate to the home page
@@ -17,3 +18,7 @@ Feature: Interaction with groups of elements
   Scenario: Waiting on a set of elements
     When I wait a variable time for elements to appear
     Then I can wait a variable time and pass specific parameters
+
+  Scenario: Waiting on a set of elements to disappear
+    When I wait a variable time for elements to disappear
+    Then I can wait a variable time for elements to disappear and pass specific parameters

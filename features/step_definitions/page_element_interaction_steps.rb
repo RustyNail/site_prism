@@ -1,13 +1,5 @@
 # frozen_string_literal: true
 
-Then(/^I can get the page title$/) do
-  expect(@test_site.home.title).to eq('Home Page')
-end
-
-Then(/^the page has no title$/) do
-  expect(@test_site.no_title.title).to eq('')
-end
-
 Then(/^the page does not have element$/) do
   expect(@test_site.home.has_no_nonexistent_element?).to be true
 
@@ -26,10 +18,18 @@ Then(/^I can see the welcome header$/) do
   expect(@test_site.home.welcome_header.text).to eq('Welcome')
 end
 
-Then(/^I can see the welcome header with capybara query options$/) do
-  expect(@test_site.home).to have_welcome_header(text: 'Welcome')
+Then(/^I can see a header using a capybara text query$/) do
+  expect(@test_site.home).to have_welcome_headers(text: 'Sub-Heading 2')
+end
 
-  expect { @test_site.home.welcome_header text: 'Welcome' }.not_to raise_error
+Then(/^I can see a row using a capybara class query$/) do
+  expect(@test_site.home).to have_rows(class: 'link_c')
+end
+
+Then(/^I can see the first row$/) do
+  expect(@test_site.home).to have_rows
+
+  expect(@test_site.home.rows.first.text).to eq('a')
 end
 
 Then(/^the welcome header is not matched with invalid text$/) do
@@ -42,31 +42,22 @@ Then(/^I can see the welcome message$/) do
   expect(@test_site.home.welcome_message.text).to eq('This is the home page, there is some stuff on it')
 end
 
-Then(/^I can see the welcome message with capybara query options$/) do
-  expect(@test_site.home).to have_welcome_message(text: 'This is the home page, there is some stuff on it')
+Then(/^I can see a message using a capybara text query$/) do
+  expect(@test_site.home).to have_welcome_messages(text: 'This is the home page, there is some stuff on it')
 end
 
 Then(/^I can see the go button$/) do
   expect(@test_site.home).to have_go_button
-  @test_site.home.go_button.click
 end
 
-Then(/^I can see the link to the search page$/) do
+Then(/^I can see the the HREF of the link$/) do
   expect(@test_site.home).to have_link_to_search_page
 
   expect(@test_site.home.link_to_search_page['href']).to include('search.htm')
 end
 
-Then(/^I cannot see the missing squirrel$/) do
-  using_wait_time(0) do
-    expect(@test_site.home).not_to have_squirrel
-  end
-end
-
-Then(/^I cannot see the missing other thingy$/) do
-  using_wait_time(0) do
-    expect(@test_site.home).not_to have_other_thingy
-  end
+Then(/^I can see the CLASS of the link$/) do
+  expect(@test_site.home.link_to_search_page['class']).to eq('link link--undefined')
 end
 
 Then(/^I can get the text values for the group of links$/) do
@@ -140,7 +131,7 @@ Then(/^I do not wait for an nonexistent element when checking for invisibility$/
   expect(Time.new - start).to be < 1
 end
 
-When(/^I wait for invisibility of an element embedded into a section which is removed$/) do
+When(/^I remove the parent section of the element$/) do
   @test_site.home.remove_container_with_element_btn.click
 end
 
@@ -154,10 +145,27 @@ When(/^I wait a variable time for elements to appear$/) do
   @test_site.home.wait_for_lots_of_links(0.1)
 end
 
+When(/^I wait a variable time for elements to disappear$/) do
+  @test_site.home.wait_for_no_removing_links
+  @test_site.home.wait_for_no_removing_links(0.1)
+end
+
 Then(/^I can wait a variable time and pass specific parameters$/) do
   @test_site.home.wait_for_lots_of_links(0.1, count: 2)
   Capybara.using_wait_time 0.3 do
     # intentionally wait and pass nil to force this to cycle
     expect(@test_site.home.wait_for_lots_of_links(nil, count: 198_108_14)).to be false
   end
+end
+
+Then(/^I can wait a variable time for elements to disappear and pass specific parameters$/) do
+  expect(@test_site.home.wait_for_no_removing_links(0.1, text: 'wibble')).to be true
+end
+
+Then(/^I can obtain the native property of an element$/) do
+  expect(@test_site.home.welcome_header.native).to be_a Selenium::WebDriver::Element
+end
+
+Then(/^I can obtain the native property of a section$/) do
+  expect(@test_site.home.people.native).to be_a Selenium::WebDriver::Element
 end
